@@ -1,0 +1,52 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<div class="row">
+    <div class="col-md-3">
+        <ul>
+            @foreach (var course in Model.Courses)
+            {
+                <li>
+                    <a asp-action="Index" asp-route-courseId="@course.CourseId">@course.CourseName</a>
+                </li>
+            }
+        </ul>
+    </div>
+    <div class="col-md-9">
+        <table class="table">
+            <thead>
+            </thead>
+            <tbody>
+                <div class="course-message">
+                    @if (!string.IsNullOrEmpty(Model.SelectedCourseName))
+                    {
+                        <h2>@Model.SelectedCourseName</h2>
+                    }
+                    else
+                    {
+                        <h2>Välkommen, välj en kurs till vänster.</h2>
+                    }
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model.SelectedCourseName))
+                {
+                    <tr>
+                        <th>Teacher name</th>
+                        <th>Course</th>
+                    </tr>
+                    @foreach (var teacher in Model.Teachers)
+                    {
+                        <tr>
+                            <td>@teacher.TeacherName</td>
+                            <td>@teacher.CourseName</td>
+                        </tr>
+                    }
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>

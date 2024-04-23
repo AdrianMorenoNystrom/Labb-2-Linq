@@ -1,0 +1,46 @@
+﻿@model LABB_2.Models.Enrollment
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Enrollment</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Grade" class="control-label"></label>
+                <select asp-for="Grade" class="form-control">
+                    <option value="">-- Select Grade --</option>
+                    @foreach (var grade in Enum.GetValues(typeof(Grade)))
+                    {
+                        <option value="@grade">@grade</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="FkCourseId" class="control-label"></label>
+                <select asp-for="FkCourseId" class="form-control" asp-items="ViewBag.FkCourseId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="FkStudentId" class="control-label"></label>
+                <select asp-for="FkStudentId" class="form-control" asp-items="ViewBag.FkStudentId"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
