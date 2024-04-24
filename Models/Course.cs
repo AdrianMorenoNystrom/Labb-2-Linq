@@ -8,9 +8,9 @@ namespace LABB_2.Models
         [Key]
         public int CourseId { get; set; }
         public string CourseName { get; set; }
-        [ForeignKey("Teacher")]
+        [ForeignKey("Teachers")]
         public int FkTeacherId { get; set; }
-        public virtual Teacher? Teacher { get; set; }
+        public Teacher? Teacher { get; set; }
         public virtual ICollection<Enrollment>? Enrollments { get; set; }
     }
 }

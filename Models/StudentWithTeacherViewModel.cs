@@ -5,6 +5,6 @@
         public IEnumerable<StudentWithTeacher> Students { get; set; }
         public IEnumerable<Teacher> Teachers { get; set; }
 
-        public string SelectedTeacherName { get; set; }
+        public string SelectedStudentName { get; set; }
     }
 }

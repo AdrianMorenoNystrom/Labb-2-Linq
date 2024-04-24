@@ -2,10 +2,10 @@
 
 #nullable disable
 
-namespace LABB_2.Data.Migrations
+namespace LABB_2.Migrations
 {
     /// <inheritdoc />
-    public partial class update : Migration
+    public partial class studentId : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

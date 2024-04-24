@@ -1,52 +1,43 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-
-<div class="row">
+﻿<div class="row">
     <div class="col-md-3">
         <ul>
-            @foreach (var teacher in Model.Teachers)
+            @foreach (var student in Model.Students)
             {
                 <li>
-                    <a asp-action="Index" asp-route-courseId="@teacher.TeacherId">@teacher.TeacherName</a>
+                    <a asp-action="Index" asp-route-studentId="@student.StudentId">@student.StudentName</a>
                 </li>
             }
         </ul>
     </div>
     <div class="col-md-9">
-        <table class="table">
-            <thead>
-            </thead>
-            <tbody>
-                <div class="course-message">
-                    @if (!string.IsNullOrEmpty(Model.SelectedTeacherName))
-                    {
-                        <h2>@Model.SelectedTeacherName</h2>
-                    }
-                    else
-                    {
-                        <h2>Välkommen, välj en lärare till vänster.</h2>
-                    }
-                </div>
+        <div class="course-message">
+            @if (!string.IsNullOrEmpty(Model.SelectedStudentName))
+            {
+                <h2>@Model.SelectedStudentName</h2>
+            }
+            else
+            {
+                <h2>Välkommen, välj en elev till vänster.</h2>
+            }
+        </div>
 
-                @if (!string.IsNullOrEmpty(Model.SelectedTeacherName))
-                {
+        @if (!string.IsNullOrEmpty(Model.SelectedStudentName))
+        {
+            <table class="table">
+                <thead>
                     <tr>
                         <th>Teacher name</th>
-                        <th>Student</th>
                     </tr>
-                    @foreach (var teacher in Model.Teachers)
+                </thead>
+                <tbody>
+                    @foreach (var student in Model.Students)
                     {
                         <tr>
-                            <td>@teacher.TeacherName</td>
-                            <td>@teacher.StudentName</td>
+                            <td>@student.TeacherName</td>
                         </tr>
                     }
-                }
-
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        }
     </div>
 </div>

@@ -49,8 +49,8 @@ namespace LABB_2.Controllers
         // GET: Enrollments/Create
         public IActionResult Create()
         {
-            ViewBag.FkCourseId = new SelectList(_context.Courses, "CourseId", "CourseName");
-            ViewBag.FkStudentId = new SelectList(_context.Students, "StudentId", "StudentName");
+            ViewData["FkCourseId"] = new SelectList(_context.Courses, "CourseId", "CourseId");
+            ViewData["FkStudentId"] = new SelectList(_context.Students, "StudentId", "StudentId");
             return View();
         }
 

@@ -54,7 +54,7 @@ namespace LABB_2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CourseId,CourseName")] Course course)
+        public async Task<IActionResult> Create([Bind("CourseId,CourseName,FkTeacherId")] Course course)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace LABB_2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CourseId,CourseName")] Course course)
+        public async Task<IActionResult> Edit(int id, [Bind("CourseId,CourseName,FkTeacherId")] Course course)
         {
             if (id != course.CourseId)
             {

@@ -15,50 +15,57 @@ namespace LABB_2.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index(int? teacherId)
+        public async Task<IActionResult> Index(int? StudentId)
         {
             // Retrieve the list of teachers
-            var teachers = await _context.Teachers.ToListAsync();
+            var students = await _context.Students.ToListAsync();
 
             // Start with querying students
-            var query = from s in _context.Students
-                        join e in _context.Enrollments on s.StudentId equals e.FkStudentId
-                        join c in _context.Courses on e.FkCourseId equals c.CourseId
-                        join tl in _context.Teachers on c.CourseId equals tl.TeacherId
-                        select new { Teacher = tl, Student = s };
+            var query = from t in _context.Teachers
+                        join c in _context.Courses on t.TeacherId equals c.FkTeacherId
+                        join e in _context.Enrollments on c.CourseId equals e.FkCourseId
+                        join s in _context.Students on e.FkStudentId equals s.StudentId
+                        select new { s, t };
+            //var query = from s in _context.Students
+            //            join e in _context.Enrollments on s.StudentId equals e.FkStudentId
+            //            join c in _context.Courses on e.FkCourseId equals c.CourseId
+            //            join tl in _context.Teachers on c.FkTeacherId equals tl.TeacherId
+            //            select new { tl,  s };
+
 
             // Filter by selected teacher if provided
-            if (teacherId.HasValue)
+            if (StudentId.HasValue)
             {
-                query = query.Where(x => x.Teacher.TeacherId == teacherId.Value);
+                query = query.Where(x => x.s.StudentId == StudentId.Value);
             }
 
             // Project the result to ViewModel
             var studentTeacherViewModels = await query.Select(x => new StudentWithTeacher
             {
-                TeacherName = x.Teacher.TeacherName,
-                StudentName = x.Student.StudentName
+                StudentName = x.s.StudentName,
+                StudentId = x.s.StudentId,
+                TeacherName = x.t.TeacherName,
             }).ToListAsync();
 
             // Retrieve the name of the selected teacher
-            string selectedTeacherName = null;
-            if (teacherId.HasValue)
+            string selectedStudentName = null;
+            if (StudentId.HasValue)
             {
-                var selectedTeacher = await _context.Teachers
-                    .Where(t => t.TeacherId == teacherId.Value)
+                var selectedStudent = await _context.Students
+                    .Where(s => s.StudentId == StudentId.Value)
                     .FirstOrDefaultAsync();
 
-                if (selectedTeacher != null)
+                if (selectedStudent != null)
                 {
-                    selectedTeacherName = selectedTeacher.TeacherName;
+                    selectedStudentName = selectedStudent.StudentName;
                 }
             }
 
             // Prepare the ViewModel
             var viewModel = new StudentWithTeacherViewModel
             {
-                Teachers = teachers,
-                SelectedTeacherName = selectedTeacherName
+                Students = studentTeacherViewModels,
+                SelectedStudentName = selectedStudentName
             };
 
             return View(viewModel);

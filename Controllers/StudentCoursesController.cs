@@ -6,12 +6,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LABB_2.Controllers
 {
-    public class TeacherCoursesController : Controller
+    public class StudentCoursesController : Controller
     {
         //Kontext för databas
         private readonly ApplicationDbContext _context;
         //Initiera kontexten
-        public TeacherCoursesController(ApplicationDbContext context)
+        public StudentCoursesController(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -19,19 +19,23 @@ namespace LABB_2.Controllers
         public async Task<IActionResult> Index(int? courseId)
         {
             var courses = await _context.Courses.ToListAsync();
+            var teachers = await _context.Teachers.ToListAsync();
 
             var query = from cl in _context.Courses
                         join t in _context.Teachers on cl.FkTeacherId equals t.TeacherId
-                        select new { cl, t};
+                        join e in _context.Enrollments on cl.CourseId equals e.FkCourseId
+                        join s in _context.Students on e.FkStudentId equals s.StudentId
+                        select new { cl, s ,t};
 
             if (courseId.HasValue)
             {
                 query = query.Where(x => x.cl.CourseId == courseId.Value);
             }
 
-            var teachers = await query.Select(x => new TeacherWithCourse
+            var students = await query.Select(x => new StudentWithCourse
             {
                 TeacherName = x.t.TeacherName,
+                StudentName = x.s.StudentName,
                 CourseName = x.cl.CourseName
             }).ToListAsync();
 
@@ -42,16 +46,17 @@ namespace LABB_2.Controllers
                     .Where(c => c.CourseId == courseId.Value)
                     .FirstOrDefaultAsync();
 
-                if(selectedCourse != null)
+                if (selectedCourse != null)
                 {
                     SelectedCourseName = selectedCourse.CourseName;
                 }
             }
 
-            var viewModel = new TeacherWithCourseViewModel
+            var viewModel = new StudentWithCourseViewModel
             {
                 Courses = courses,
                 Teachers = teachers,
+                Students = students,
                 SelectedCourseName = SelectedCourseName
             };
             return View(viewModel);

@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace LABB_2.Data.Migrations
+namespace LABB_2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240422195910_studentname")]
-    partial class studentname
+    [Migration("20240424101258_studentId")]
+    partial class studentId
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,14 +54,22 @@ namespace LABB_2.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CourseId"));
 
+                    b.Property<int?>("CourseClassId")
+                        .HasColumnType("int");
+
                     b.Property<string>("CourseName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("FkTeacherId")
+                        .HasColumnType("int");
 
                     b.Property<int?>("TeacherId")
                         .HasColumnType("int");
 
                     b.HasKey("CourseId");
+
+                    b.HasIndex("CourseClassId");
 
                     b.HasIndex("TeacherId");
 
@@ -76,15 +84,14 @@ namespace LABB_2.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CourseClassId"));
 
-                    b.Property<int>("FkCourseId")
-                        .HasColumnType("int");
+                    b.Property<string>("ClassName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("FkTeacherId")
                         .HasColumnType("int");
 
                     b.HasKey("CourseClassId");
-
-                    b.HasIndex("FkCourseId");
 
                     b.HasIndex("FkTeacherId");
 
@@ -164,26 +171,24 @@ namespace LABB_2.Data.Migrations
 
             modelBuilder.Entity("LABB_2.Models.Course", b =>
                 {
-                    b.HasOne("LABB_2.Models.Teacher", null)
+                    b.HasOne("LABB_2.Models.CourseClass", null)
+                        .WithMany("Courses")
+                        .HasForeignKey("CourseClassId");
+
+                    b.HasOne("LABB_2.Models.Teacher", "Teacher")
                         .WithMany("Courses")
                         .HasForeignKey("TeacherId");
+
+                    b.Navigation("Teacher");
                 });
 
             modelBuilder.Entity("LABB_2.Models.CourseClass", b =>
                 {
-                    b.HasOne("LABB_2.Models.Course", "Course")
-                        .WithMany()
-                        .HasForeignKey("FkCourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("LABB_2.Models.Teacher", "Teacher")
                         .WithMany()
                         .HasForeignKey("FkTeacherId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Course");
 
                     b.Navigation("Teacher");
                 });
@@ -210,6 +215,11 @@ namespace LABB_2.Data.Migrations
             modelBuilder.Entity("LABB_2.Models.Course", b =>
                 {
                     b.Navigation("Enrollments");
+                });
+
+            modelBuilder.Entity("LABB_2.Models.CourseClass", b =>
+                {
+                    b.Navigation("Courses");
                 });
 
             modelBuilder.Entity("LABB_2.Models.Student", b =>
